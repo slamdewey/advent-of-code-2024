@@ -22,7 +22,9 @@ function parseLocationLists(data: string): SignificantLocation[][] {
   return locationLists;
 }
 
-function calculateDifferenceBetweenLocationLists(a: SignificantLocation[], b: SignificantLocation[]): number {
+function calculateDifference(listA: SignificantLocation[], listB: SignificantLocation[]): number {
+  const a = listA.slice().sort((a, b) => a.id - b.id);
+  const b = listB.slice().sort((a, b) => a.id - b.id);
   if (a.length != b.length) {
     return -1;
   }
@@ -34,13 +36,36 @@ function calculateDifferenceBetweenLocationLists(a: SignificantLocation[], b: Si
   return totalDifference;
 }
 
+function calculateSimilarityScore(a: SignificantLocation[], b: SignificantLocation[]): number {
+  const frequenciesB: number[] = [];
+  b.forEach((location) => {
+    const id = location.id;
+    if (!frequenciesB[id]) {
+      frequenciesB[id] = 0;
+    }
+    frequenciesB[id] += 1;
+  });
+
+  let similarityScore = 0;
+  a.forEach((location) => {
+    const id = location.id;
+    if (!frequenciesB[id]) {
+      return;
+    }
+    similarityScore += id * frequenciesB[id];
+  });
+
+  return similarityScore;
+}
+
 const locationLists = parseLocationLists(locationIdData);
-const listA = locationLists[0].sort((a, b) => a.id - b.id);
-const listB = locationLists[1].sort((a, b) => a.id - b.id);
-const diff = calculateDifferenceBetweenLocationLists(listA, listB);
+const diff = calculateDifference(locationLists[0], locationLists[1]);
+const similarityScore = calculateSimilarityScore(locationLists[0], locationLists[1]);
 
 console.log(`Found ${locationLists.length} lists`);
 locationLists.forEach((list, i) => {
   console.log(`List ${i}: ${list.length} items`);
 });
-console.log(`Total difference between the first two lists is ${diff}`);
+console.log('\nResults:');
+console.log(`Total difference: ${diff}`);
+console.log(`Similarity score: ${similarityScore}`);
