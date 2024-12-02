@@ -1,8 +1,9 @@
 import * as fs from 'fs';
 import { join } from 'path';
-import { SignificantLocation } from './types';
 
-const locationIdData = fs.readFileSync(join(__dirname, '/data.txt'), 'utf8');
+type SignificantLocation = {
+  id: number;
+};
 
 function parseLocationLists(data: string): SignificantLocation[][] {
   // split by newlines
@@ -58,6 +59,7 @@ function calculateSimilarityScore(a: SignificantLocation[], b: SignificantLocati
   return similarityScore;
 }
 
+const locationIdData = fs.readFileSync(join(__dirname, '/data.txt'), 'utf8');
 const locationLists = parseLocationLists(locationIdData);
 const diff = calculateDifference(locationLists[0], locationLists[1]);
 const similarityScore = calculateSimilarityScore(locationLists[0], locationLists[1]);
