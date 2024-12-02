@@ -38,5 +38,9 @@ const locationLists = parseLocationLists(locationIdData);
 const listA = locationLists[0].sort((a, b) => a.id - b.id);
 const listB = locationLists[1].sort((a, b) => a.id - b.id);
 const diff = calculateDifferenceBetweenLocationLists(listA, listB);
-console.log(listA, listB);
-console.log(diff);
+
+console.log(`Found ${locationLists.length} lists`);
+locationLists.forEach((list, i) => {
+  console.log(`List ${i}: ${list.length} items`);
+});
+console.log(`Total difference between the first two lists is ${diff}`);
