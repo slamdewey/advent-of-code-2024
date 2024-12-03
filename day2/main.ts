@@ -41,10 +41,28 @@ function isReportSafe(report: Report): boolean {
   return true;
 }
 
-function countSafeReports(reports: Report[]) {
+function dampenProblem(report: Report): Report {
+  if (isReportSafe(report)) {
+    return report;
+  }
+  // try to fix report
+  for (let i = 0; i < report.data.length; i++) {
+    const newData = report.data.slice();
+    newData.splice(i, 1);
+    const newReport = { data: newData };
+    if (isReportSafe(newReport)) {
+      return newReport;
+    }
+  }
+  // return original report as failure (this report will fail evaluation)
+  return report;
+}
+
+function countSafeReports(reports: Report[], reportPreparingFn?: (report: Report) => Report) {
   let numSafeReports = 0;
   reports.forEach((report) => {
-    if (isReportSafe(report)) {
+    const preparedReport = reportPreparingFn ? reportPreparingFn(report) : report;
+    if (isReportSafe(preparedReport)) {
       numSafeReports++;
     }
   });
@@ -53,7 +71,7 @@ function countSafeReports(reports: Report[]) {
 
 const data = fs.readFileSync(join(__dirname, '/data.txt'), 'utf8');
 const reports = parseReports(data);
-const numSafeReports = countSafeReports(reports);
+const numSafeReports = countSafeReports(reports, dampenProblem);
 
 console.log(`Found ${reports.length} reports`);
 console.log(`Number of safe reports: ${numSafeReports}`);
