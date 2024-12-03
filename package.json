@@ -1,7 +1,8 @@
 {
   "scripts": {
     "day1": "npx ts-node day1/main.ts",
-    "day2": "npx ts-node day2/main.ts"
+    "day2": "npx ts-node day2/main.ts",
+    "day3": "npx ts-node day3/main.ts"
   },
   "dependencies": {
     "@types/node": "^22.10.1",
