@@ -15,7 +15,6 @@ function parseOperations(data: string): OperationCall[] {
     switch (match[0]) {
       case 'do()':
       case "don't()":
-        console.log(match[0]);
         operations.push({
           name: match[0].substring(0, match[0].indexOf('(')) as 'do' | "don't",
         });
@@ -40,11 +39,9 @@ function findSum(operations: OperationCall[]) {
     switch (operation.name) {
       case 'do':
         enabled = 1;
-        console.log('enabled!');
         break;
       case "don't":
         enabled = 0;
-        console.log('disabled!');
         break;
       case 'mul':
         if (!operation.params || operation.params.length < 2) {
